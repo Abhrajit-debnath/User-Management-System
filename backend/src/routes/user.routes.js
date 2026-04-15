@@ -5,7 +5,7 @@ const {
   updateUserById,
   deleteUserById,
   getProfile,
-  updateProfile
+  updateProfile,
 } = require("../controllers/users.controller.js");
 const {
   createUserValidator,
@@ -21,9 +21,9 @@ const router = Router();
 router.post(
   "/",
   authMiddleware,
-  roleMiddleware("create"),
   createUserValidator,
   Validate,
+  roleMiddleware("create"),
   createUser,
 );
 
@@ -36,13 +36,13 @@ router.get("/:id", authMiddleware, roleMiddleware("view"), getUserById);
 router.put(
   "/:id",
   authMiddleware,
-  roleMiddleware("update"),
   updateUserValidator,
   Validate,
+  roleMiddleware("update"),
   updateUserById,
 );
 
-// users only routes 
+// users only routes
 
 router.get("/profile", authMiddleware, getProfile);
 router.put("/profile", authMiddleware, updateProfile);
