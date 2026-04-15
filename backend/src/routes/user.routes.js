@@ -1,18 +1,19 @@
 const { Router } = require("express");
 const {
-  createUser,
-  getAllUsers,
-  updateUserById,
-  deleteUserById,
-  getProfile,
-  updateProfile,
+  createUserController,
+  getAllUsersController,
+  updateUserByIdController,
+  deleteUserByIdController,
+  getProfileController,
+  updateProfileController,
+  getUserByIdController
 } = require("../controllers/users.controller.js");
 const {
   createUserValidator,
   updateUserValidator,
 } = require("../validators/user.validator.js");
-const { Validate } = require("../middleware/validate.middleware.js");
-const roleMiddleware = require("../middleware/role.middleware.js");
+const Validate  = require("../middlewares/auth.middleware.js");
+const roleMiddleware = require("../middlewares/role.middleware.js");
 const authMiddleware = require("../middlewares/auth.middleware.js");
 const router = Router();
 
@@ -24,27 +25,27 @@ router.post(
   createUserValidator,
   Validate,
   roleMiddleware("create"),
-  createUser,
+  createUserController,
 );
 
-router.delete("/:id", authMiddleware, roleMiddleware("delete"), deleteUserById);
+router.delete("/:id", authMiddleware, roleMiddleware("delete"), deleteUserByIdController);
 
 // admin and manager only routes
 
-router.get("/", authMiddleware, roleMiddleware("list"), getAllUsers);
-router.get("/:id", authMiddleware, roleMiddleware("view"), getUserById);
+router.get("/", authMiddleware, roleMiddleware("list"), getAllUsersController);
+router.get("/:id", authMiddleware, roleMiddleware("view"), getUserByIdController);
 router.put(
   "/:id",
   authMiddleware,
   updateUserValidator,
   Validate,
   roleMiddleware("update"),
-  updateUserById,
+  updateUserByIdController,
 );
 
 // users only routes
 
-router.get("/profile", authMiddleware, getProfile);
-router.put("/profile", authMiddleware, updateProfile);
+router.get("/profile", authMiddleware, getProfileController);
+router.put("/profile", authMiddleware, updateProfileController);
 
 module.exports = router;

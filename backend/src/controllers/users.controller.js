@@ -8,7 +8,7 @@ const {
   updateUserProfile
 } = require("../services/user.service.js");
 
-const createUser = async (req, res) => {
+const createUserController = async (req, res) => {
   try {
     const { name, email, role, status, password } = req.body;
     const user = await createUser(name, email, role, status, password);
@@ -18,7 +18,7 @@ const createUser = async (req, res) => {
   }
 };
 
-const getAllUsers = async (req, res) => {
+const getAllUsersController = async (req, res) => {
   try {
     const data = await getUsers(req.query);
     sendResponse(res, "Users fetched successfully", 200, data);
@@ -27,7 +27,7 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-const getUserById = async (req, res) => {
+const getUserByIdController = async (req, res) => {
   const { id } = req.params;
   try {
     const data = await getUser(id);
@@ -37,7 +37,7 @@ const getUserById = async (req, res) => {
   }
 };
 
-const updateUserById = async (req, res) => {
+const updateUserByIdController = async (req, res) => {
   const { id } = req.params;
   try {
     const data = await updateUser(id, req.body);
@@ -47,7 +47,7 @@ const updateUserById = async (req, res) => {
   }
 };
 
-const deleteUserById = async (req, res) => {
+const deleteUserByIdController = async (req, res) => {
   const { id } = req.params;
   try {
     const data = await deleteUser(id);
@@ -57,7 +57,7 @@ const deleteUserById = async (req, res) => {
   }
 };
 
-const getProfile = async (req, res) => {
+const getProfileController = async (req, res) => {
   const { userId } = req.user;
   try {
     const data = await getUserProfile(userId);
@@ -67,7 +67,7 @@ const getProfile = async (req, res) => {
   }
 };
 
-const updateProfile = async (req, res) => {
+const updateProfileController = async (req, res) => {
   const { userId } = req.user;
   try {
     const data = await updateUserProfile(userId,req.body);
@@ -82,4 +82,4 @@ const updateProfile = async (req, res) => {
 
 
 
-module.exports = { getAllUsers, createUser, getUserById, updateUserById , deleteUserById, getProfile,updateProfile};
+module.exports = { getAllUsersController, createUserController, getUserByIdController, updateUserByIdController , deleteUserByIdController, getProfileController,updateProfileController};
