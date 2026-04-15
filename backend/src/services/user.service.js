@@ -2,7 +2,7 @@ const User = require("../models/user.model");
 const bcrypt = require("bcryptjs");
 const generatePassword = require("../utils/generatePassword.util");
 
-const createUser = async (name, email, role, status, password) => {
+const createUser = async (userId, name, email, role, status, password) => {
   const existingUser = await User.findOne({ email });
   if (existingUser) throw new Error("Email already exists");
 
@@ -15,6 +15,7 @@ const createUser = async (name, email, role, status, password) => {
     role,
     status,
     password: hashedPassword,
+    createdBy: userId,
   });
 
   return {
@@ -59,26 +60,30 @@ const getUsers = async (query) => {
 };
 
 const getUser = async (id) => {
-  const user = await User.findById(
-    id,
+  const user = await User.findById(id).select("-password");
+  return {
+    user,
+  };
+};
+
+const updateUser = async (id, userId, updatedData) => {
+  if (updatedData.password) {
+    updatedData.password = await bcrypt.hash(updatedData.password, 10);
+  }
+  const user = await User.findOneAndUpdate(
+    { _id: id },
+    { ...updatedData, updatedBy: userId },
+    {
+      returnDocument: "after",
+    },
   ).select("-password");
   return {
     user,
   };
 };
 
-const updateUser = async (id, updatedData) => {
-  const user = await User.findOneAndUpdate({ _id: id }, updatedData, {
-    returnDocument: "after",
-  }).select("-password");
-  return {
-    user,
-  };
-};
-
 const deleteUser = async (id) => {
-  const user = await User.findOneAndDelete({ _id: id })
-    .select("-password");
+  const user = await User.findOneAndDelete({ _id: id }).select("-password");
 
   if (!user) {
     throw new Error("User not found");
@@ -86,12 +91,9 @@ const deleteUser = async (id) => {
 
   return { user };
 };
-
 
 const getUserProfile = async (userId) => {
-const user = await User.findById(userId)
-  .select("-password");
-
+  const user = await User.findById(userId).select("-password");
 
   if (!user) {
     throw new Error("User not found");
@@ -100,9 +102,10 @@ const user = await User.findById(userId)
   return { user };
 };
 
-const updateUserProfile = async (userId,updatedData) => {
-const user = await User.findOneAndUpdate({  userId },updatedData)
-  .select("-password");
+const updateUserProfile = async (userId, updatedData) => {
+  const user = await User.findOneAndUpdate({ userId }, updatedData).select(
+    "-password",
+  );
 
   if (!user) {
     throw new Error("User not found");
@@ -111,7 +114,12 @@ const user = await User.findOneAndUpdate({  userId },updatedData)
   return { user };
 };
 
-
-
-
-module.exports = { createUser, getUsers, getUser, updateUser,deleteUser,getUserProfile,updateUserProfile };
+module.exports = {
+  createUser,
+  getUsers,
+  getUser,
+  updateUser,
+  deleteUser,
+  getUserProfile,
+  updateUserProfile,
+};

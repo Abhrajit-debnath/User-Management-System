@@ -15,6 +15,9 @@ const authMiddleware = (req, res, next) => {
       role: decodedToken.role,
     };
 
+    console.log(req.user);
+    
+
     next();
   } catch (error) {
     if (error.name === "TokenExpiredError") {
