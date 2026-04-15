@@ -58,4 +58,21 @@ const getUsers = async (query) => {
   };
 };
 
-module.exports = { createUser, getUsers };
+const getUser = async (id) => {
+  const user = await User.findOne({
+    id,
+  }).select("-password");
+  return {
+    user,
+  };
+};
+
+const updateUser = async (id, updatedData) => {
+  const user = await User.findOneAndUpdate({ _id: id }, updatedData, {
+    returnDocument: "after",
+  }).select("-password");
+  return {
+    user,
+  };
+};
+module.exports = { createUser, getUsers, getUser, updateUser };
