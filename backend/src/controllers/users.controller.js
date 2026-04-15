@@ -3,6 +3,7 @@ const {
   createUser,
   getUsers,
   getUser,
+  deleteUser,
   updateUser,
   getUserProfile,
   updateUserProfile
@@ -59,6 +60,7 @@ const deleteUserByIdController = async (req, res) => {
 
 const getProfileController = async (req, res) => {
   const { userId } = req.user;
+  
   try {
     const data = await getUserProfile(userId);
     sendResponse(res, "User profile fetched successfully", 200, data);

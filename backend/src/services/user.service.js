@@ -59,9 +59,9 @@ const getUsers = async (query) => {
 };
 
 const getUser = async (id) => {
-  const user = await User.findOne({
+  const user = await User.findById(
     id,
-  }).select("-password");
+  ).select("-password");
   return {
     user,
   };
@@ -89,8 +89,9 @@ const deleteUser = async (id) => {
 
 
 const getUserProfile = async (userId) => {
-const user = await User.findById({  userId })
+const user = await User.findById(userId)
   .select("-password");
+
 
   if (!user) {
     throw new Error("User not found");

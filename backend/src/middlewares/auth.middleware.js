@@ -1,4 +1,4 @@
-
+const decodeToken = require("../utils/decodeToken.util")
 const sendResponse = require("../utils/response.utils");
 
 const authMiddleware = (req, res, next) => {

@@ -6,13 +6,13 @@ const {
   deleteUserByIdController,
   getProfileController,
   updateProfileController,
-  getUserByIdController
+  getUserByIdController,
 } = require("../controllers/users.controller.js");
 const {
   createUserValidator,
   updateUserValidator,
 } = require("../validators/user.validator.js");
-const Validate  = require("../middlewares/auth.middleware.js");
+const Validate = require("../middlewares/auth.middleware.js");
 const roleMiddleware = require("../middlewares/role.middleware.js");
 const authMiddleware = require("../middlewares/auth.middleware.js");
 const router = Router();
@@ -28,12 +28,29 @@ router.post(
   createUserController,
 );
 
-router.delete("/:id", authMiddleware, roleMiddleware("delete"), deleteUserByIdController);
+router.delete(
+  "/:id",
+  authMiddleware,
+  roleMiddleware("delete"),
+  deleteUserByIdController,
+);
+
+// users only routes
+
+router.get("/profile", authMiddleware, getProfileController);
+router.put("/profile", authMiddleware, updateProfileController);
+
+
 
 // admin and manager only routes
 
 router.get("/", authMiddleware, roleMiddleware("list"), getAllUsersController);
-router.get("/:id", authMiddleware, roleMiddleware("view"), getUserByIdController);
+router.get(
+  "/:id",
+  authMiddleware,
+  roleMiddleware("view"),
+  getUserByIdController,
+);
 router.put(
   "/:id",
   authMiddleware,
@@ -43,9 +60,6 @@ router.put(
   updateUserByIdController,
 );
 
-// users only routes
 
-router.get("/profile", authMiddleware, getProfileController);
-router.put("/profile", authMiddleware, updateProfileController);
 
 module.exports = router;
