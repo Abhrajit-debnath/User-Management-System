@@ -2,7 +2,8 @@ const { Router } = require("express");
 const {
   createUser,
   getAllUsers,
-  updateUserById
+  updateUserById,
+  deleteUserById
 } = require("../controllers/users.controller.js");
 const {
   createUserValidator,
@@ -24,6 +25,8 @@ router.post(
   createUser,
 );
 
+router.delete("/:id", authMiddleware, roleMiddleware("delete"), deleteUserById);
+
 // admin and manager only routes
 
 router.get("/", authMiddleware, roleMiddleware("list"), getAllUsers);
@@ -36,4 +39,10 @@ router.put(
   Validate,
   updateUserById,
 );
+
+// users only routes 
+
+
+
+
 module.exports = router;

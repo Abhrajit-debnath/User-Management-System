@@ -75,4 +75,17 @@ const updateUser = async (id, updatedData) => {
     user,
   };
 };
-module.exports = { createUser, getUsers, getUser, updateUser };
+
+const deleteUser = async (id) => {
+  const user = await User.findOneAndDelete({ _id: id })
+    .select("-password");
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  return { user };
+};
+
+
+module.exports = { createUser, getUsers, getUser, updateUser,deleteUser };

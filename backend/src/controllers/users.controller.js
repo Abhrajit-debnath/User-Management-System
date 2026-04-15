@@ -45,4 +45,16 @@ const updateUserById = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, createUser, getUserById, updateUserById };
+const deleteUserById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const data = await deleteUser(id);
+    sendResponse(res, "User deleted successfully", 200, data);
+  } catch (error) {
+    sendResponse(res, error.message, 500);
+  }
+};
+
+
+
+module.exports = { getAllUsers, createUser, getUserById, updateUserById , deleteUserById};
