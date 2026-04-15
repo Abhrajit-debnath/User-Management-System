@@ -1,0 +1,14 @@
+const sendResponse = require("../utils/response.utils");
+const { createUser } = require("../services/user.service.js");
+
+const createUser = async (req, res) => {
+  try {
+    const { name, email, role, status, password } = req.body;
+    const user = await createUser(name, email, role, status, password);
+    sendResponse(res, "User created successfully", 201, user);
+  } catch (error) {
+    sendResponse(res, error.message, error.statusCode || 500);
+  }
+};
+
+module.exports = { createUser };

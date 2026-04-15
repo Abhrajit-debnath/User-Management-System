@@ -1,4 +1,4 @@
-const { validationResult, checkSchema } = require("express-validator");
+const {  checkSchema } = require("express-validator");
 
 const loginValidator = checkSchema({
   email: {
@@ -13,4 +13,4 @@ const loginValidator = checkSchema({
   },
 });
 
-module.exports = loginValidator;
+module.exports = {loginValidator};
