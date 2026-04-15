@@ -3,7 +3,9 @@ const {
   createUser,
   getAllUsers,
   updateUserById,
-  deleteUserById
+  deleteUserById,
+  getProfile,
+  updateProfile
 } = require("../controllers/users.controller.js");
 const {
   createUserValidator,
@@ -42,7 +44,7 @@ router.put(
 
 // users only routes 
 
-
-
+router.get("/profile", authMiddleware, getProfile);
+router.put("/profile", authMiddleware, updateProfile);
 
 module.exports = router;

@@ -88,4 +88,29 @@ const deleteUser = async (id) => {
 };
 
 
-module.exports = { createUser, getUsers, getUser, updateUser,deleteUser };
+const getUserProfile = async (userId) => {
+const user = await User.findById({  userId })
+  .select("-password");
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  return { user };
+};
+
+const updateUserProfile = async (userId,updatedData) => {
+const user = await User.findOneAndUpdate({  userId },updatedData)
+  .select("-password");
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  return { user };
+};
+
+
+
+
+module.exports = { createUser, getUsers, getUser, updateUser,deleteUser,getUserProfile,updateUserProfile };

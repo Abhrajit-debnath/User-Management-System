@@ -4,6 +4,8 @@ const {
   getUsers,
   getUser,
   updateUser,
+  getUserProfile,
+  updateUserProfile
 } = require("../services/user.service.js");
 
 const createUser = async (req, res) => {
@@ -55,6 +57,29 @@ const deleteUserById = async (req, res) => {
   }
 };
 
+const getProfile = async (req, res) => {
+  const { userId } = req.user;
+  try {
+    const data = await getUserProfile(userId);
+    sendResponse(res, "User profile fetched successfully", 200, data);
+  } catch (error) {
+    sendResponse(res, error.message, 500);
+  }
+};
+
+const updateProfile = async (req, res) => {
+  const { userId } = req.user;
+  try {
+    const data = await updateUserProfile(userId,req.body);
+    sendResponse(res, "User profile updated successfully", 200, data);
+  } catch (error) {
+    sendResponse(res, error.message, 500);
+  }
+};
 
 
-module.exports = { getAllUsers, createUser, getUserById, updateUserById , deleteUserById};
+
+
+
+
+module.exports = { getAllUsers, createUser, getUserById, updateUserById , deleteUserById, getProfile,updateProfile};
