@@ -1,5 +1,5 @@
 const sendResponse = require("../utils/response.utils");
-const { createUser } = require("../services/user.service.js");
+const { createUser, getUsers } = require("../services/user.service.js");
 
 const createUser = async (req, res) => {
   try {
@@ -11,4 +11,13 @@ const createUser = async (req, res) => {
   }
 };
 
-module.exports = { createUser };
+const getAllUsers = async (req, res) => {
+  try {
+    const data = await getUsers(req.query);
+    sendResponse(res, "Users fetched successfully", 200, data);
+  } catch (error) {
+    sendResponse(res, error.message, 500);
+  }
+};
+
+module.exports = { getAllUsers, createUser };
