@@ -3,8 +3,11 @@ import { useContext, useEffect } from "react";
 import { UserContext } from "../context/User.context";
 import { api } from "../config/axios.config";
 import toast from "react-hot-toast";
+
+
 const EditUserForm = ({ user, onClose }) => {
-    const { token, setUsers } = useContext(UserContext)
+
+    const { token, users, setUsers } = useContext(UserContext)
 
     const {
         register,
@@ -33,21 +36,29 @@ const EditUserForm = ({ user, onClose }) => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            const updatedUser = res.data.data.user
+
+
+
+            const updatedUser = res.data.data.user;
+
+            if (!updatedUser) {
+                toast.error("Invalid response from server");
+                return;
+            }
+
             setUsers(prev =>
                 prev.map(u =>
-                    u._id === user._id ? updatedUser : u
+                    u._id === updatedUser._id ? updatedUser : u
                 )
             );
 
             toast.success("User updated successfully");
-            onClose()
+            onClose();
 
         } catch (error) {
             toast.error(error.response?.data?.message || "Update failed");
         }
     };
-
 
     return (
         <div className="w-screen h-screen  flex justify-center items-center">

@@ -5,19 +5,19 @@ import { api } from "../config/axios.config";
 import { UserContext } from "../context/User.context";
 import toast from "react-hot-toast";
 
-const UserCard = ({ user, setopenEditModal,setselectedUser  }) => {
+const UserCard = ({ user, onEdit }) => {
 
     const { setUsers, token } = useContext(UserContext);
 
     const handledelete = async (userId) => {
         try {
-           const res = await api.delete(`/api/users/${userId}`, {
+            const res = await api.delete(`/api/users/${userId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
 
-            
+
 
             setUsers(prev => prev.filter(u => u._id !== userId));
             toast.success("User deleted successfully");
@@ -38,12 +38,9 @@ const UserCard = ({ user, setopenEditModal,setselectedUser  }) => {
 
                 <div className="flex items-center gap-2">
 
-              
+
                     <button
-                        onClick={() => {
-                            setopenEditModal(true)
-                            setselectedUser(user)
-                        }}
+                        onClick={() => onEdit(user)}
                         className="bg-gray-500 capitalize text-white rounded-full px-2 py-1 text-xs hover:bg-gray-600 transition"
                     >
                         edit

@@ -1,6 +1,6 @@
 
 
-import { useContext, useEffect, useState } from "react"
+import { useContext, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import Statcard from "./Statcard.component"
 import { UserContext } from "../context/User.context"
@@ -15,17 +15,17 @@ const Dashboard = () => {
     const [openCreateModal, setopenCreateModal] = useState(false)
     const [selectedUser, setselectedUser] = useState(null)
     const { users } = useContext(UserContext)
-    const activeUsers = users?.filter(u => u.status !== "inactive")
-    const inactiveUsers = users?.filter(u => u.status !== "active")
+    const safeUsers = Array.isArray(users) ? users.filter(Boolean) : [];
+    const activeUsers = safeUsers?.filter(u => u.status !== "inactive")
+    const inactiveUsers = safeUsers?.filter(u => u.status !== "active")
     const user = JSON.parse(localStorage.getItem("user"))
     const userRole = user?.role || "user"
-
     const isAdmin = userRole === 'admin'
     const isManager = userRole === "manager";
 
     const filteredUsers = isManager
-        ? users.filter(u => u.role !== "admin")
-        : users;
+        ? safeUsers.filter(u => u.role !== "admin")
+        : safeUsers;
 
 
     const handleLogout = () => {
@@ -44,7 +44,7 @@ const Dashboard = () => {
 
                         <EditUserForm
                             user={selectedUser}
-                            onClose={() => setopenModal(false)}
+                            onClose={() => setopenEditModal(false)}
                         />
 
                     </div>
@@ -59,7 +59,7 @@ const Dashboard = () => {
                     <div className=" rounded-xl flex justify-center items-center shadow-lg w-full  p-6 relative">
 
                         <CreateUserForm
-
+                            setView={setView}
                             onClose={() => setopenCreateModal(false)}
                         />
 
@@ -101,7 +101,7 @@ const Dashboard = () => {
 
                     <button
                         onClick={handleLogout}
-                        className="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg transition"
+                        className="text-sm bg-red-500 hover:bg-red-600 text-white cursor-pointer px-4 py-2 rounded-lg transition"
                     >
                         Logout
                     </button>
@@ -161,7 +161,7 @@ const Dashboard = () => {
                     </h3>
 
                     <div className="flex flex-wrap gap-3">
-                        {(isManager) && (
+                        {(isManager || isAdmin) && (
                             <button
                                 onClick={() => setView((prev) => !prev)}
                                 className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-sm font-medium transition"
@@ -202,7 +202,7 @@ const Dashboard = () => {
                                     {p}
                                 </span>
                             ))}
-                        {["View All Users", "Edit Users"].map(p => (
+                        {isManager && ["View All Users", "Edit Users"].map(p => (
                             <span key={p} className="text-xs bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">
                                 {p}
                             </span>
@@ -219,7 +219,7 @@ const Dashboard = () => {
 
                 {view && (
                     <div className="mt-6">
-                        <div className="max-h-[60vh] overflow-y-auto pr-2">
+                        <div className="max-h-58 overflow-y-auto pr-2">
 
                             {filteredUsers.length === 0 ? (
                                 <div className="flex flex-col items-center justify-center py-10 text-gray-500">

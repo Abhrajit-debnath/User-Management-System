@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { useContext } from "react";
 import { UserContext } from "../context/User.context";
 
-const CreateUserForm = ({ onClose }) => {
+const CreateUserForm = ({ onClose,setView }) => {
 
     const { setUsers, token } = useContext(UserContext)
 
@@ -26,7 +26,9 @@ const CreateUserForm = ({ onClose }) => {
             setUsers(prev => [...prev, createdUser])
             toast.success("User created successfully")
             reset()
+            setView(true)
             onClose()
+
         } catch (error) {
             toast.error(error.response?.data?.message || "Creation failed");
         }
@@ -75,7 +77,8 @@ const CreateUserForm = ({ onClose }) => {
 
 
                 <div>
-                    <label className="text-sm font-medium">Password</label>
+                    <label className="text-sm font-medium pr-2">Password</label>
+                    <span className="text-sm font-medium pr-2">(optional)</span>
                     <input
                         type="password"
                         {...register("password", {
