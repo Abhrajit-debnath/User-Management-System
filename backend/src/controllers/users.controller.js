@@ -73,6 +73,7 @@ const getProfileController = async (req, res) => {
 
 const updateProfileController = async (req, res) => {
   const { userId } = req.user;
+
   try {
     const data = await updateUserProfile(userId, req.body);
     sendResponse(res, "User profile updated successfully", 200, data);

@@ -19,7 +19,7 @@ const createUser = async (userId, name, email, role, status, password) => {
   });
 
   return {
-    id: user._id,
+    _id: user._id,
     name: user.name,
     email: user.email,
     role: user.role,
@@ -89,7 +89,7 @@ const deleteUser = async (id) => {
     throw new Error("User not found");
   }
 
-  return { user };
+  return { _id: user._id };
 };
 
 const getUserProfile = async (userId) => {
@@ -103,9 +103,11 @@ const getUserProfile = async (userId) => {
 };
 
 const updateUserProfile = async (userId, updatedData) => {
-  const user = await User.findOneAndUpdate({ userId }, updatedData).select(
-    "-password",
-  );
+  console.log(updatedData);
+
+  const user = await User.findOneAndUpdate({ _id: userId }, updatedData, {
+    returnDocument: "after",
+  }).select("-password");
 
   if (!user) {
     throw new Error("User not found");

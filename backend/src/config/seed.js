@@ -32,7 +32,7 @@ const seedAdmin = async () => {
       {
         name: "Regular User",
         email: "user@test.com",
-        password: await bcrypt.hash("user123", 10),
+        password: await bcrypt.hash("user@123", 10),
         role: "user",
         status: "active",
       },
