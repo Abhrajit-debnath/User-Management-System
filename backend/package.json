@@ -8,8 +8,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev" : "nodemon index.js",
-    "seed" : "node src/config/seed.js"
+    "dev": "nodemon index.js",
+    "seed": "node src/config/seed.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

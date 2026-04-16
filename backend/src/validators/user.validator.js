@@ -14,7 +14,7 @@ const createUserValidator = checkSchema({
     },
   },
   role: {
-    isin: {
+    isIn: {
       options: [["manager", "admin", "user"]],
       errorMessage: "Invalid role",
     },
@@ -23,7 +23,7 @@ const createUserValidator = checkSchema({
     },
   },
   status: {
-    isin: {
+    isIn: {
       options: [["active", "inactive"]],
       errorMessage: "Invalid status",
     },

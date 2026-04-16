@@ -3,10 +3,13 @@ const authRoutes = require("./src/routes/auth.routes");
 const userRoutes = require("./src/routes/user.routes");
 const connectb = require("./src/config/db.config");
 const express = require("express");
+const cors = require("cors")
+
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 const app = express();
+app.use(cors())
 
 connectb();
 

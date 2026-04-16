@@ -1,11 +1,13 @@
 const User = require("../models/user.model");
 const generateToken = require("../utils/generateToken.utils");
-const bcrypt =  require("bcryptjs")
+const bcrypt = require("bcryptjs");
 
 const loginUser = async (email, password) => {
   const user = await User.findOne({
     email,
   });
+
+  console.log(user);
 
   if (!user) throw new Error("Invalid credentials");
 
@@ -22,7 +24,7 @@ const loginUser = async (email, password) => {
     token,
     user: {
       id: user._id,
-      name:user.name,
+      name: user.name,
       email: user.email,
       role: user.role,
       status: user.status,
@@ -30,4 +32,4 @@ const loginUser = async (email, password) => {
   };
 };
 
-module.exports = {loginUser};
+module.exports = { loginUser };
