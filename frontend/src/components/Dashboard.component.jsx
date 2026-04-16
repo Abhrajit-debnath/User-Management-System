@@ -8,18 +8,18 @@ import CreateUserForm from "./CreateUser.component"
 import ProfileCard from "./ProfileCard.component"
 import { useUserState } from "../hooks/useUserState"
 import FilterInput from "./FilterInput.component"
+import Pagination from "./Pagination.component"
 
 const Dashboard = () => {
     const [view, setView] = useState(true)
     const navigate = useNavigate()
     const [openEditModal, setopenEditModal] = useState(false)
     const [openCreateModal, setopenCreateModal] = useState(false)
-    const [editState, setEditState] = useState(null)
     const [selectedUser, setselectedUser] = useState(null)
-
     const [openMenu, setopenMenu] = useState(false)
-    const { users } = useContext(UserContext)
-    const { user, profile, isAdmin, isManager, safeUsers, filteredUsers, setFilters, inactiveUsers, filters, activeUsers } = useUserState()
+    const { users, setFilters, filters } = useContext(UserContext)
+    const { user, profile, isAdmin, isManager, pagination, currentPage, setCurrentPage, filteredUsers, inactiveUsers, activeUsers } = useUserState()
+
 
     const handleLogout = useCallback(() => {
         localStorage.removeItem("token")
@@ -27,7 +27,10 @@ const Dashboard = () => {
         navigate("/login")
     }, [navigate])
 
-    
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
     return (
         <div className="min-h-screen bg-gray-50">
             {openEditModal && (
@@ -38,7 +41,7 @@ const Dashboard = () => {
                         {
 
                             <EditUserForm
-                                editState={editState}
+                                editState={profile ? "ProfileEdit" : "userEdit"}
                                 user={selectedUser || profile}
                                 onClose={() => setopenEditModal(false)}
                             />
@@ -233,7 +236,7 @@ const Dashboard = () => {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                         <Statcard
                             title="Total Users"
-                            value={users?.length}
+                            value={pagination?.total}
                             icon="👥"
                             color="border-blue-500"
                         />
@@ -318,36 +321,104 @@ const Dashboard = () => {
                     <FilterInput setFilters={setFilters} filters={filters} />
                 )}
 
-                {view && (isAdmin || isManager) && filteredUsers.length > 0 ?
+                {view && (isAdmin || isManager) ? (
+                    filteredUsers.length > 0 ? (
 
-                    (
                         <div className="mt-8">
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-auto max-h-90">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-80 overflow-auto">
                                 {filteredUsers.map(user => (
                                     <UserCard
                                         key={user._id}
                                         user={user}
                                         onEdit={user => {
-                                            setselectedUser(user)
-                                            setopenEditModal(true)
+                                            setselectedUser(user);
+                                            setopenEditModal(true);
                                         }}
                                     />
                                 ))}
                             </div>
 
-
                             <div className="mt-8 p-6 bg-gray-50 rounded-2xl text-center">
                                 <p className="text-sm text-gray-600">
-                                    Showing <span className="font-bold">{filteredUsers.length}</span> of{' '}
-                                    <span className="font-bold">{safeUsers.length}</span> users
+                                    Page <strong>{currentPage}</strong> of <strong>{pagination.totalPages}</strong>
+                                    <br />
+                                    Showing <strong>{filteredUsers.length}</strong> of <strong>{pagination.total || 0}</strong> users
                                 </p>
                             </div>
                         </div>
-                    ) : <div className="flex flex-col items-center justify-center py-10 text-gray-500">
-                        <span className="text-4xl mb-2">👤</span>
-                        <p>No users found</p>
-                    </div>}
+                    ) : (
 
+                        <div className="mt-12 flex flex-col items-center justify-center py-20 text-center bg-linear-to-br from-gray-50 to-gray-100 rounded-3xl">
+                            <div className="w-24 h-24 bg-linear-to-br from-gray-200 to-gray-300 rounded-3xl flex items-center justify-center mb-6 shadow-lg">
+                                <span className="text-4xl">👥</span>
+                            </div>
+
+                            {filters.search || filters.role || filters.status ? (
+
+                                <>
+                                    <h3 className="text-2xl font-bold text-gray-800 mb-3">No matching users</h3>
+                                    <p className="text-gray-600 mb-6 max-w-md">
+                                        No users match your current filters. Try adjusting your search or clear filters.
+                                    </p>
+                                    <div className="flex gap-3">
+                                        <button
+                                            onClick={() => setFilters({ search: "", role: "", status: "" })}
+                                            className="px-6 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-medium"
+                                        >
+                                            Clear Filters
+                                        </button>
+                                        <button
+                                            onClick={() => window.location.reload()}
+                                            className="px-6 py-2.5 bg-gray-200 text-gray-800 rounded-xl hover:bg-gray-300 transition-all font-medium"
+                                        >
+                                            Refresh
+                                        </button>
+                                    </div>
+                                </>
+                            ) : (
+
+                                <>
+                                    <h3 className="text-2xl font-bold text-gray-800 mb-3">
+                                        {isAdmin ? "No users yet" : "No users available"}
+                                    </h3>
+                                    <p className="text-gray-600 mb-8 max-w-md">
+                                        {isAdmin
+                                            ? "Get started by creating your first user."
+                                            : "No users to display at this time."
+                                        }
+                                    </p>
+                                    {isAdmin && (
+                                        <button
+                                            onClick={() => setopenCreateModal(true)}
+                                            className="px-8 py-3 bg-linear-to-r from-green-500 to-green-600 text-white rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all hover:scale-105"
+                                        >
+                                            ➕ Create First User
+                                        </button>
+                                    )}
+                                </>
+                            )}
+                        </div>
+                    )
+                ) : (
+
+                    view && (!isAdmin && !isManager && profile) ? (
+                        <ProfileCard setopenEditModal={setopenEditModal} />
+                    ) : (
+                        <div className="flex flex-col items-center justify-center py-20 text-gray-500">
+                            <span className="text-6xl mb-4">👤</span>
+                            <h3 className="text-2xl font-bold text-gray-700 mb-2">Loading profile...</h3>
+                            <p className="text-gray-500">Please wait while we load your information</p>
+                        </div>
+                    )
+                )}
+
+
+                {isAdmin && filteredUsers.length > 0 && (
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={pagination.totalPages || 1}
+                        onPageChange={handlePageChange} />
+                )}
                 {view && (!isAdmin && !isManager && profile) && (
                     <div className="flex">
                         <ProfileCard setopenEditModal={setopenEditModal} />

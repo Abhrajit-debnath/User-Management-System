@@ -3,6 +3,7 @@ import { UserContext } from '../context/User.context'
 
 const ProfileCard = ({ setopenEditModal }) => {
     const { profile } = useContext(UserContext)
+    
     return (
         <div className="mt-6 bg-white rounded-2xl p-6  border border-gray-300 w-md">
             <div className="flex justify-between">

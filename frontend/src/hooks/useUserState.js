@@ -1,49 +1,50 @@
-import { useContext, useMemo, useState } from "react"; // ✅ Added useState
+import { useContext, useMemo, useState } from "react";
 import { UserContext } from "../context/User.context";
 import { getUserFromStorage } from "../utils/getUser.util";
 
 export const useUserState = () => {
-  const { users, profile } = useContext(UserContext);
-  const [filters, setFilters] = useState({ search: "", role: "", status: "" });
+  const {
+    users,
+    profile,
+    pagination,
+    filters,
+    setFilters,
+    setCurrentPage,
+    currentPage,
+  } = useContext(UserContext);
 
   const safeUsers = useMemo(
     () => (Array.isArray(users) ? users.filter(Boolean) : []),
     [users],
   );
 
+  const filteredUsers = useMemo(() => {
+    if (!Array.isArray(safeUsers) || safeUsers.length === 0) return [];
+    return safeUsers;
+  }, [safeUsers]);
+
   const user = useMemo(() => getUserFromStorage(), []);
   const isAdmin = user?.role === "admin";
   const isManager = user?.role === "manager";
-  const filteredUsers = useMemo(() => {
-    return safeUsers.filter((user) => {
-      if (isManager && user.role === "admin") return false;
-      const matchesSearch =
-        !filters.search ||
-        user.name.toLowerCase().includes(filters.search.toLowerCase()) ||
-        user.email.toLowerCase().includes(filters.search.toLowerCase());
-      const matchesRole = !filters.role || user.role === filters.role;
-      const matchesStatus = !filters.status || user.status === filters.status;
-
-      return matchesSearch && matchesRole && matchesStatus;
-    });
-  }, [safeUsers, filters, isManager]);
 
   return {
-    safeUsers,
     filters,
     setFilters,
+    setCurrentPage,
+    filteredUsers,
     activeUsers: useMemo(
-      () => filteredUsers.filter((u) => u.status === "active"),
+      () => filteredUsers.filter((u) => u?.status === "active"),
       [filteredUsers],
     ),
     inactiveUsers: useMemo(
-      () => filteredUsers.filter((u) => u.status === "inactive"), // ✅ Use filteredUsers
+      () => filteredUsers.filter((u) => u?.status === "inactive"),
       [filteredUsers],
     ),
     user,
     profile,
-    filteredUsers,
     isAdmin,
+    currentPage,
+    pagination,
     isManager,
   };
 };

@@ -9,9 +9,6 @@ const UserCard = ({ user, onEdit }) => {
 
     const { setUsers, token } = useContext(UserContext);
 
-    console.log(user);
-    
-
     const handledelete = async (userId) => {
         try {
             const res = await api.delete(`/api/users/${userId}`, {
@@ -71,7 +68,8 @@ const UserCard = ({ user, onEdit }) => {
                 <button
                     onClick={() => {
                         console.log("CLICK USER:", user)
-                        handledelete(user._id)}}
+                        handledelete(user._id)
+                    }}
                     className="bg-red-500 capitalize text-white rounded-full px-2 py-1 text-xs hover:bg-red-600 transition"
                 >
                     delete
