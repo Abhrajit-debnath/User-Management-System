@@ -41,7 +41,7 @@ const UserCard = ({ user, onEdit }) => {
 
                     <button
                         onClick={() => onEdit(user)}
-                        className="bg-gray-500 capitalize text-white rounded-full px-2 py-1 text-xs hover:bg-gray-600 transition"
+                        className="bg-gray-500 capitalize cursor-pointer text-white rounded-full px-2 py-1 text-xs hover:bg-gray-600 transition"
                     >
                         edit
                     </button>

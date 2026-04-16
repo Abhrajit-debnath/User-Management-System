@@ -5,9 +5,9 @@ import { api } from "../config/axios.config";
 import toast from "react-hot-toast";
 
 
-const EditUserForm = ({ user, onClose }) => {
-
-    const { token, users, setUsers } = useContext(UserContext)
+const EditUserForm = ({ editState, user, onClose }) => {
+    const isProfileEdit = editState === 'profileEdit';
+    const { token, users, setUsers, setProfile } = useContext(UserContext)
 
     const {
         register,
@@ -18,50 +18,86 @@ const EditUserForm = ({ user, onClose }) => {
         );
 
     useEffect(() => {
-        if (user) {
+        if (!isProfileEdit) {
             reset({
                 name: user.name,
                 email: user.email,
                 role: user.role,
                 status: user.status
             });
+        } else {
+            reset({
+                name: user.name,
+                email: user.email,
+            });
         }
-    }, [user, reset]);
+    }, [user, reset, editState]);
 
 
     const onSubmit = async (data) => {
+        const payload = isProfileEdit ? {
+            name: data.name,
+            email: data.email,
+            ...(data.password ? { password: data.password } : {})
+        } : data
+
         try {
-            const res = await api.put(`/api/users/${user._id}`, data, {
-                headers: {
-                    Authorization: `Bearer ${token}`
+            if (editState === 'profileEdit') {
+                const res = await api.put(`/api/users/profile/`, payload, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                console.log(res);
+
+
+                const updatedProfile = res.data.data.user;
+
+                if (!updatedProfile) {
+                    toast.error("Invalid response from server");
+                    return;
                 }
-            });
+
+                setProfile(updatedProfile);
+                toast.success("Profile updated successfully");
+                onClose();
+            } else {
+                const res = await api.put(`/api/users/${user._id}`, payload, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
 
 
 
-            const updatedUser = res.data.data.user;
+                const updatedUser = res.data.data.user;
 
-            if (!updatedUser) {
-                toast.error("Invalid response from server");
-                return;
+                if (!updatedUser) {
+                    toast.error("Invalid response from server");
+                    return;
+                }
+
+                setUsers(prev =>
+                    prev.map(u =>
+                        u._id === updatedUser._id ? updatedUser : u
+                    )
+                );
+                toast.success("User updated successfully");
+                onClose();
             }
 
-            setUsers(prev =>
-                prev.map(u =>
-                    u._id === updatedUser._id ? updatedUser : u
-                )
-            );
 
-            toast.success("User updated successfully");
-            onClose();
 
         } catch (error) {
+            console.log(error);
+
             toast.error(error.response?.data?.message || "Update failed");
         }
     };
 
     return (
-        <div className="w-screen h-screen  flex justify-center items-center">
+        <div className="w-screen flex justify-center items-center">
 
             <div className=" w-full max-w-md p-6 rounded-xl shadow-md bg-white">
 
@@ -106,30 +142,59 @@ const EditUserForm = ({ user, onClose }) => {
                     </div>
 
 
-                    <div>
-                        <label className="text-sm font-medium">Role</label>
-                        <select
-                            {...register("role")}
-                            className="w-full mt-1 border px-3 py-2 rounded-lg"
-                        >
-                            <option value="admin">Admin</option>
-                            <option value="manager">Manager</option>
-                            <option value="user">User</option>
-                        </select>
-                    </div>
+                    {
+                        !isProfileEdit && (
+                            <div>
+                                <label className="text-sm font-medium">Role</label>
+                                <select
+                                    {...register("role")}
+                                    className="w-full mt-1 border px-3 py-2 rounded-lg"
+                                >
+                                    <option value="admin">Admin</option>
+                                    <option value="manager">Manager</option>
+                                    <option value="user">User</option>
+                                </select>
+                            </div>
+                        )
+                    }
 
 
-                    <div>
-                        <label className="text-sm font-medium">Status</label>
-                        <select
-                            {...register("status")}
-                            className="w-full mt-1 border px-3 py-2 rounded-lg"
-                        >
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                        </select>
-                    </div>
 
+                    {
+                        isProfileEdit && (
+                            <div>
+                                <label className="text-sm font-medium pr-2">Password</label>
+                                <input
+                                    type="password"
+                                    {...register("password", {
+                                        minLength: {
+                                            value: 8,
+                                            message: "Minimum 8 characters"
+                                        }
+                                    })}
+                                    className="w-full mt-1 border px-3 py-2 rounded-lg"
+                                />
+                                {errors.password && (
+                                    <p className="text-red-500 text-xs">{errors.password.message}</p>
+                                )}
+                            </div>
+                        )
+                    }
+
+                    {
+                        !isProfileEdit && (
+                            <div>
+                                <label className="text-sm font-medium">Status</label>
+                                <select
+                                    {...register("status")}
+                                    className="w-full mt-1 border px-3 py-2 rounded-lg"
+                                >
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
+                        )
+                    }
 
                     <button
                         type="submit"

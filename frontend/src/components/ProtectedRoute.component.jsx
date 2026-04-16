@@ -11,8 +11,6 @@ const ProtectedRoute = ({ children }) => {
         }
     }, [token]);
 
-    if (!token) return null;
-
     return children;
 };
 

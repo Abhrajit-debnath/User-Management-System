@@ -16,18 +16,26 @@ function App() {
     },
     {
       path: "/dashboard", element:
+
         <ProtectedRoute>
           <DashboardPage />
         </ProtectedRoute>
+
     },
   ]);
+
 
   return (
     <UserContextProvider>
       <Toaster />
       <RouterProvider router={router} />
     </UserContextProvider>
+
+
+
+
   );
+
 }
 
 export default App;

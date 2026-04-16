@@ -7,14 +7,15 @@ import { UserContext } from "../context/User.context"
 import UserCard from "./Usercard.component"
 import EditUserForm from "./Edituser.component"
 import CreateUserForm from "./CreateUser.component"
+import ProfileCard from "./ProfileCard.component"
 
 const Dashboard = () => {
-    const [view, setView] = useState(false)
+    const [view, setView] = useState(true)
     const navigate = useNavigate()
     const [openEditModal, setopenEditModal] = useState(false)
     const [openCreateModal, setopenCreateModal] = useState(false)
     const [selectedUser, setselectedUser] = useState(null)
-    const { users } = useContext(UserContext)
+    const { users, profile } = useContext(UserContext)
     const safeUsers = Array.isArray(users) ? users.filter(Boolean) : [];
     const activeUsers = safeUsers?.filter(u => u.status !== "inactive")
     const inactiveUsers = safeUsers?.filter(u => u.status !== "active")
@@ -25,7 +26,7 @@ const Dashboard = () => {
 
     const filteredUsers = isManager
         ? safeUsers.filter(u => u.role !== "admin")
-        : safeUsers;
+        : safeUsers
 
 
     const handleLogout = () => {
@@ -41,11 +42,20 @@ const Dashboard = () => {
                 <div className="fixed inset-0 bg-black/90 flex justify-center items-center z-50">
 
                     <div className=" rounded-xl shadow-lg w-full  p-6 relative">
+                        {
+                            !profile ? (
+                                <EditUserForm
+                                    editState="userEdit"
+                                    user={selectedUser}
+                                    onClose={() => setopenEditModal(false)}
+                                />
+                            ) : <EditUserForm
+                                editState="profileEdit"
+                                user={profile}
+                                onClose={() => setopenEditModal(false)}
+                            />
+                        }
 
-                        <EditUserForm
-                            user={selectedUser}
-                            onClose={() => setopenEditModal(false)}
-                        />
 
                     </div>
 
@@ -180,7 +190,7 @@ const Dashboard = () => {
                         )}
 
                         {(!isAdmin && !isManager) && <button
-                            onClick={() => navigate("/profile")}
+                            onClick={() => setView(prev => !prev)}
                             className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-2.5 rounded-xl text-sm font-medium transition"
                         >
                             👤 My Profile
@@ -217,7 +227,7 @@ const Dashboard = () => {
                 </div>
 
 
-                {view && (
+                {view && (isAdmin || isManager) && (
                     <div className="mt-6">
                         <div className="max-h-58 overflow-y-auto pr-2">
 
@@ -245,6 +255,11 @@ const Dashboard = () => {
                     </div>
                 )}
 
+                {view && (!isAdmin && !isManager && profile) && (
+                    <div className="flex">
+                        <ProfileCard setopenEditModal={setopenEditModal} />
+                    </div>
+                )}
             </div>
         </div>
     )

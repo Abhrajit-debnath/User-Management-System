@@ -12,8 +12,6 @@ const PublicRoute = ({ children }) => {
         }
     }, [token]);
 
-    if (!token) return null;
-
     return children;
 }
 
