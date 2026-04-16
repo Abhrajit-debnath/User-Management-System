@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useCallback, useContext, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import Statcard from "./Statcard.component"
 import { UserContext } from "../context/User.context"
@@ -7,6 +7,7 @@ import EditUserForm from "./Edituser.component"
 import CreateUserForm from "./CreateUser.component"
 import ProfileCard from "./ProfileCard.component"
 import { useUserState } from "../hooks/useUserState"
+import FilterInput from "./FilterInput.component"
 
 const Dashboard = () => {
     const [view, setView] = useState(true)
@@ -15,22 +16,18 @@ const Dashboard = () => {
     const [openCreateModal, setopenCreateModal] = useState(false)
     const [editState, setEditState] = useState(null)
     const [selectedUser, setselectedUser] = useState(null)
+
     const [openMenu, setopenMenu] = useState(false)
     const { users } = useContext(UserContext)
+    const { user, profile, isAdmin, isManager, safeUsers, filteredUsers, setFilters, inactiveUsers, filters, activeUsers } = useUserState()
 
-    const { user, profile, isAdmin, isManager, safeUsers, filteredUsers, inactiveUsers, activeUsers } = useUserState()
-
-
-
-
-
-
-    const handleLogout = () => {
+    const handleLogout = useCallback(() => {
         localStorage.removeItem("token")
         localStorage.removeItem("user")
         navigate("/login")
-    }
+    }, [navigate])
 
+    
     return (
         <div className="min-h-screen bg-gray-50">
             {openEditModal && (
@@ -69,6 +66,8 @@ const Dashboard = () => {
 
                 </div>
             )}
+
+
 
 
 
@@ -315,34 +314,39 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-
-                {view && (isAdmin || isManager) && (
-                    <div className="mt-6">
-                        <div className="max-h-58 overflow-y-auto pr-2">
-
-                            {filteredUsers.length === 0 ? (
-                                <div className="flex flex-col items-center justify-center py-10 text-gray-500">
-                                    <span className="text-4xl mb-2">👤</span>
-                                    <p>No users found</p>
-                                </div>
-                            ) : (
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    {filteredUsers.map(u => (
-                                        <UserCard
-                                            key={u._id}
-                                            user={u}
-                                            onEdit={(user) => {
-                                                setselectedUser(user);
-                                                setopenEditModal(true);
-                                            }}
-                                        />
-                                    ))}
-                                </div>
-                            )}
-
-                        </div>
-                    </div>
+                {isAdmin && (
+                    <FilterInput setFilters={setFilters} filters={filters} />
                 )}
+
+                {view && (isAdmin || isManager) && filteredUsers.length > 0 ?
+
+                    (
+                        <div className="mt-8">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-auto max-h-90">
+                                {filteredUsers.map(user => (
+                                    <UserCard
+                                        key={user._id}
+                                        user={user}
+                                        onEdit={user => {
+                                            setselectedUser(user)
+                                            setopenEditModal(true)
+                                        }}
+                                    />
+                                ))}
+                            </div>
+
+
+                            <div className="mt-8 p-6 bg-gray-50 rounded-2xl text-center">
+                                <p className="text-sm text-gray-600">
+                                    Showing <span className="font-bold">{filteredUsers.length}</span> of{' '}
+                                    <span className="font-bold">{safeUsers.length}</span> users
+                                </p>
+                            </div>
+                        </div>
+                    ) : <div className="flex flex-col items-center justify-center py-10 text-gray-500">
+                        <span className="text-4xl mb-2">👤</span>
+                        <p>No users found</p>
+                    </div>}
 
                 {view && (!isAdmin && !isManager && profile) && (
                     <div className="flex">
