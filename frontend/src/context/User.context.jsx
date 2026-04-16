@@ -9,11 +9,9 @@ const UserContextProvider = ({ children }) => {
     const token = localStorage.getItem("token")
     const user = getUserFromStorage()
     const [profile, setProfile] = useState(null)
-
-
     const role = user?.role
-
     const [users, setUsers] = useState([]);
+    
 
     useEffect(() => {
 

@@ -9,6 +9,9 @@ const UserCard = ({ user, onEdit }) => {
 
     const { setUsers, token } = useContext(UserContext);
 
+    console.log(user);
+    
+
     const handledelete = async (userId) => {
         try {
             const res = await api.delete(`/api/users/${userId}`, {
@@ -16,8 +19,6 @@ const UserCard = ({ user, onEdit }) => {
                     Authorization: `Bearer ${token}`
                 }
             });
-
-
 
             setUsers(prev => prev.filter(u => u._id !== userId));
             toast.success("User deleted successfully");
@@ -68,8 +69,10 @@ const UserCard = ({ user, onEdit }) => {
                 </div>
 
                 <button
-                    onClick={() => handledelete(user._id)}
-                    className="bg-red-500 text-white rounded-full px-2 py-1 text-xs hover:bg-red-600 transition"
+                    onClick={() => {
+                        console.log("CLICK USER:", user)
+                        handledelete(user._id)}}
+                    className="bg-red-500 capitalize text-white rounded-full px-2 py-1 text-xs hover:bg-red-600 transition"
                 >
                     delete
                 </button>
