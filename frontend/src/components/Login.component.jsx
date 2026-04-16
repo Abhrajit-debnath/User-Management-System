@@ -1,8 +1,10 @@
 
-import axios from 'axios'
+import { api } from '../config/axios.config'
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router";
 import toast from 'react-hot-toast';
+
+
 
 const Login = () => {
 
@@ -11,22 +13,18 @@ const Login = () => {
 
     const onSubmit = async (data) => {
         try {
-            const res = await axios.post("http://localhost:8000/api/auth/login", data)
+            const res = await api.post(`/api/auth/login`, data)
             const token = res.data.data.token
             toast.success("User loggedIn successfully")
             localStorage.setItem("token", token)
             localStorage.setItem("user", JSON.stringify(res.data.data.user))
             const role = res.data.data.user.role
-            if (role === 'admin' || role === 'manager') {
-                navigate("/dashboard")
-            } else {
-                navigate("/profile")
-            }
+            if (role) navigate("/dashboard")
 
 
         } catch (error) {
-          const message = error.response?.data?.message || "Something went wrong"
-          toast.error(message)
+            const message = error.response?.data?.message || "Something went wrong"
+            toast.error(message)
 
         }
 

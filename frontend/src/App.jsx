@@ -1,26 +1,21 @@
-
-import { createBrowserRouter } from "react-router";
-import { RouterProvider } from "react-router/dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LoginPage from "./pages/Login.page";
-import { Toaster } from 'react-hot-toast';
+import DashboardPage from "./pages/Dashboard.page";
+import UserContextProvider from "./context/User.context";
+import { Toaster } from "react-hot-toast";
 
 function App() {
-
   const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <LoginPage/>
-    }
-  ])
-
+    { path: "/login", element: <LoginPage /> },
+    { path: "/dashboard", element: <DashboardPage /> },
+  ]);
 
   return (
-    <>
-    <Toaster/>
-    <RouterProvider router={router}/>
-    </>
-    
-  )
+    <UserContextProvider>
+      <Toaster />
+      <RouterProvider router={router} />
+    </UserContextProvider>
+  );
 }
 
-export default App
+export default App;
