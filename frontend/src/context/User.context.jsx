@@ -1,12 +1,13 @@
 import { createContext, useEffect, useState } from "react";
 import { api } from "../config/axios.config";
+import { getUserFromStorage } from "../utils/getUser.util";
 
 export const UserContext = createContext();
 
 const UserContextProvider = ({ children }) => {
 
     const token = localStorage.getItem("token")
-    const user = JSON.parse(localStorage.getItem("user"))
+    const user = getUserFromStorage()
     const [profile, setProfile] = useState(null)
 
 

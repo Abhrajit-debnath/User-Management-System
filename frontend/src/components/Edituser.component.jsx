@@ -97,9 +97,9 @@ const EditUserForm = ({ editState, user, onClose }) => {
     };
 
     return (
-        <div className="w-screen flex justify-center items-center">
+        <div className="flex justify-center items-center">
 
-            <div className=" w-full max-w-md p-6 rounded-xl shadow-md bg-white">
+            <div className="w-full max-w-md p-6 rounded-xl shadow-md bg-white">
 
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-xl font-semibold">Edit User</h2>
