@@ -407,7 +407,7 @@ const Dashboard = () => {
                 )}
 
 
-                {isAdmin || isManager && filteredUsers.length > 0 && (
+                {(isAdmin || isManager) && filteredUsers.length > 0 && (
                     <Pagination
                         currentPage={currentPage}
                         totalPages={pagination.totalPages || 1}
