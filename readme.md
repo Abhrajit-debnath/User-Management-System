@@ -107,14 +107,30 @@ frontend/
 - Node.js 18+
 - MongoDB Atlas account (free tier)
 
-## 🔗 Live Demo
+## Live Demo
 
 - Frontend: https://user-management-system-seven-phi.vercel.app/
-- Backend API: https://user-management-system-ctnf.onrender.com/ 
+- Backend API: https://user-management-system-ctnf.onrender.com/
 
 > Note: The backend is hosted on a free tier service and may take a few seconds to respond on first request.
 
 ## Installation
+
+## Docker Setup
+
+### Prerequisites
+ - Docker
+ - Docker Compose
+
+### Run The application
+
+```bash
+dcoker compose up --build
+```
+> Note: Make sure to properly setup environment variables
+
+
+## Manual Setup
 
 ```bash
 git clone https://github.com/Abhrajit-debnath/User-Management-System
