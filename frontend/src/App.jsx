@@ -9,7 +9,7 @@ import PublicRoute from "./components/PublicRoute.component";
 function App() {
   const router = createBrowserRouter([
     {
-      path: "/login", element:
+      path: "/", element:
         <PublicRoute>
           <LoginPage />
         </PublicRoute>
