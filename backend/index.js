@@ -8,7 +8,11 @@ const cors = require("cors");
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 const app = express();
-app.use(cors());
+
+app.use(cors({
+  origin: "https://user-management-system-seven-phi.vercel.app",
+  credentials: true
+}));
 
 connectb();
 
