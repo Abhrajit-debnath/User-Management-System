@@ -12,7 +12,9 @@ export const useUserState = () => {
     setCurrentPage,
     currentPage,
   } = useContext(UserContext);
-
+  const user = useMemo(() => getUserFromStorage(), []);
+  const isAdmin = user?.role === "admin";
+  const isManager = user?.role === "manager";
   const safeUsers = useMemo(
     () => (Array.isArray(users) ? users.filter(Boolean) : []),
     [users],
@@ -20,12 +22,12 @@ export const useUserState = () => {
 
   const filteredUsers = useMemo(() => {
     if (!Array.isArray(safeUsers) || safeUsers.length === 0) return [];
-    return safeUsers;
-  }, [safeUsers]);
 
-  const user = useMemo(() => getUserFromStorage(), []);
-  const isAdmin = user?.role === "admin";
-  const isManager = user?.role === "manager";
+    if (isManager) {
+      return safeUsers.filter((user) => user.role !== "admin");
+    }
+    return safeUsers;
+  }, [safeUsers, isManager]);
 
   return {
     filters,
