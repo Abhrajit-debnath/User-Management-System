@@ -41,9 +41,7 @@ const UserContextProvider = ({ children }) => {
                         headers: { Authorization: `Bearer ${token}` }
                     });
 
-     
-
-                    setUsers(res.data.data.users);
+                    setUsers(res.data.data.users)
                     setPagination(res.data.data.pagination);
                 } catch (error) {
                     console.error('❌ API Error:', error.response?.data || error.message);
@@ -57,14 +55,14 @@ const UserContextProvider = ({ children }) => {
         };
 
         fetchData();
-    }, [token, role, currentPage ,filters]);
+    }, [token, role, currentPage, filters]);
 
     return (
         <UserContext.Provider value={{
             users, setUsers,
             profile, setProfile,
             currentPage, setCurrentPage,
-            pagination, filters, setFilters
+            pagination, filters, setFilters, token
         }}>
             {children}
         </UserContext.Provider>

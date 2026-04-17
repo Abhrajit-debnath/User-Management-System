@@ -35,7 +35,15 @@ const UserCard = ({ user, onEdit }) => {
                 <h2 className="text-lg font-semibold">{user.name}</h2>
 
                 <div className="flex items-center gap-2">
-
+                    <button
+                        onClick={() => {
+                            console.log("CLICK USER:", user)
+                            handledelete(user._id)
+                        }}
+                        className="bg-red-500 capitalize text-white rounded-full px-2 py-1 text-xs hover:bg-red-600 transition"
+                    >
+                        delete
+                    </button>
 
                     <button
                         onClick={() => onEdit(user)}
@@ -61,19 +69,13 @@ const UserCard = ({ user, onEdit }) => {
             </div>
 
             <div className="flex justify-between items-center">
-                <div className="text-xs text-gray-400">
+                <div className="text-[10px] text-gray-400">
                     Created: {new Date(user.createdAt).toLocaleString()}
                 </div>
+                <div className="text-xs text-gray-400">
+                    updated: {new Date(user.updatedAt).toLocaleString()}
+                </div>
 
-                <button
-                    onClick={() => {
-                        console.log("CLICK USER:", user)
-                        handledelete(user._id)
-                    }}
-                    className="bg-red-500 capitalize text-white rounded-full px-2 py-1 text-xs hover:bg-red-600 transition"
-                >
-                    delete
-                </button>
             </div>
 
         </div>

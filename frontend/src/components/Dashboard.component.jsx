@@ -321,7 +321,7 @@ const Dashboard = () => {
                     <FilterInput setFilters={setFilters} filters={filters} />
                 )}
 
-                {view && (isAdmin || isManager) ? (
+                {view && (isAdmin || isManager) && (
                     filteredUsers.length > 0 ? (
 
                         <div className="mt-8">
@@ -399,26 +399,18 @@ const Dashboard = () => {
                             )}
                         </div>
                     )
-                ) : (
-
-                    view && (!isAdmin && !isManager && profile) ? (
-                        <ProfileCard setopenEditModal={setopenEditModal} />
-                    ) : (
-                        <div className="flex flex-col items-center justify-center py-20 text-gray-500">
-                            <span className="text-6xl mb-4">👤</span>
-                            <h3 className="text-2xl font-bold text-gray-700 mb-2">Loading profile...</h3>
-                            <p className="text-gray-500">Please wait while we load your information</p>
-                        </div>
-                    )
-                )}
+                ) }
 
 
-                {isAdmin && filteredUsers.length > 0 && (
+                {isAdmin || isManager && filteredUsers.length > 0 && (
                     <Pagination
                         currentPage={currentPage}
                         totalPages={pagination.totalPages || 1}
                         onPageChange={handlePageChange} />
                 )}
+
+
+
                 {view && (!isAdmin && !isManager && profile) && (
                     <div className="flex">
                         <ProfileCard setopenEditModal={setopenEditModal} />

@@ -30,10 +30,10 @@ const Login = () => {
 
     }
     return (
-        <div className="w-full max-w-md bg-white p-6 rounded-xl shadow-md">
+        <div className="w-full max-w-md bg-white p-6 rounded-xl shadow-md border-gray-500 border">
             <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 ">
 
                 {/* Email */}
                 <div>
