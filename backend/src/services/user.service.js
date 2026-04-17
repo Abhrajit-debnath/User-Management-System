@@ -27,36 +27,6 @@ const createUser = async (userId, name, email, role, status, password) => {
   };
 };
 
-//   const { page = 1, limit = 10, role = "", status = "" } = query;
-//   const filter = {};
-
-//   if (role) {
-//     filter.role = role;
-//   }
-//   if (status) {
-//     filter.status = status;
-//   }
-
-//   const skippedDataCount = (page - 1) * limit;
-
-//   const [users, total] = await Promise.all([
-//     User.find(filter)
-//       .select("-password")
-//       .skip(Number(skippedDataCount))
-//       .limit(Number(limit)),
-//     User.countDocuments(filter),
-//   ]);
-
-//   return {
-//     users,
-//     pagination: {
-//       total,
-//       page: Number(page),
-//       limit: Number(limit),
-//       totalPages: Math.ceil(total / limit),
-//     },
-//   };
-// };
 const getUsers = async (query) => {
   const { page = 1, limit = 10, role = "", status = "", search = "" } = query;
   const filter = { $or: [] };
