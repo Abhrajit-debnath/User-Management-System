@@ -135,7 +135,7 @@ PORT=8000
 
 ## Usage Instructions
 
-## Demo Credentials
+### Demo Credentials
 
 ### Admin
 
