@@ -92,6 +92,20 @@ frontend/
 | GET    | `/api/users/:id` | Get single user | ✅   |
 | PUT    | `/api/users/:id` | Update users    | ✅   |
 
+
+
+## Screenshots Overview
+
+## Login Page
+
+![login_image](./screenshots/login.png)
+
+## Dashboard Page
+
+![login_image](./screenshots/dashboard.png)
+
+
+
 ## Prerequisites
 
 - Node.js 18+
