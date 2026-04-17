@@ -5,9 +5,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - PORT=8000
-      - MONGO_URI=mongodb+srv://abhrajitdebnathcs_db_user:abhrajit20@cluster0.35vqa0a.mongodb.net/?appName=Cluster0
-      - JWT_SECRET=secret123
+      - ./backend/.env
     
   frontend:
     build: "./frontend"
