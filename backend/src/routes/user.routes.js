@@ -12,7 +12,7 @@ const {
   createUserValidator,
   updateUserValidator,
 } = require("../validators/user.validator.js");
-const Validate = require("../middlewares/auth.middleware.js");
+const Validate = require("../middlewares/validate.middleware.js");
 const roleMiddleware = require("../middlewares/role.middleware.js");
 const authMiddleware = require("../middlewares/auth.middleware.js");
 const router = Router();
@@ -22,9 +22,10 @@ const router = Router();
 router.post(
   "/",
   authMiddleware,
+  roleMiddleware("create"),
   createUserValidator,
   Validate,
-  roleMiddleware("create"),
+
   createUserController,
 );
 
@@ -37,10 +38,18 @@ router.delete(
 
 // users only routes
 
-router.get("/profile", authMiddleware, getProfileController);
-router.put("/profile", authMiddleware, updateProfileController);
-
-
+router.get(
+  "/profile",
+  authMiddleware,
+  roleMiddleware("profile"),
+  getProfileController,
+);
+router.put(
+  "/profile",
+  authMiddleware,
+  roleMiddleware("profile"),
+  updateProfileController,
+);
 
 // admin and manager only routes
 
@@ -59,7 +68,5 @@ router.put(
   roleMiddleware("update"),
   updateUserByIdController,
 );
-
-
 
 module.exports = router;

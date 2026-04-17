@@ -1,10 +1,10 @@
-const permissions = require("../../permissions");
+const permissions = require("../config/permissions");
 const sendResponse = require("../utils/response.utils");
 
 const roleMiddleware = (...requiredPermissions) => {
   return (req, res, next) => {
     if (!req.user) {
-      return sendResponse(res, "Failed to get user details", 404);
+      return sendResponse(res, "User not authenticated", 401);
     }
 
     const userRole = req.user.role;
