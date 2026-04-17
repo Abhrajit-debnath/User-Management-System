@@ -14,8 +14,8 @@ const roleMiddleware = (...requiredPermissions) => {
       return sendResponse(res, "Invalid role", 403);
     }
 
-    const hasPermissions = requiredPermissions.every(permission =>
-      rolePermissions.includes(permission)
+    const hasPermissions = requiredPermissions.every((permission) =>
+      rolePermissions.includes(permission),
     );
 
     if (!hasPermissions) {

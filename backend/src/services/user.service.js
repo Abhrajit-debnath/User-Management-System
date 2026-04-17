@@ -27,16 +27,51 @@ const createUser = async (userId, name, email, role, status, password) => {
   };
 };
 
-const getUsers = async (query) => {
-  const { page = 1, limit = 10, role = "", status = "" } = query;
-  const filter = {};
+//   const { page = 1, limit = 10, role = "", status = "" } = query;
+//   const filter = {};
 
-  if (role) {
-    filter.role = role;
+//   if (role) {
+//     filter.role = role;
+//   }
+//   if (status) {
+//     filter.status = status;
+//   }
+
+//   const skippedDataCount = (page - 1) * limit;
+
+//   const [users, total] = await Promise.all([
+//     User.find(filter)
+//       .select("-password")
+//       .skip(Number(skippedDataCount))
+//       .limit(Number(limit)),
+//     User.countDocuments(filter),
+//   ]);
+
+//   return {
+//     users,
+//     pagination: {
+//       total,
+//       page: Number(page),
+//       limit: Number(limit),
+//       totalPages: Math.ceil(total / limit),
+//     },
+//   };
+// };
+const getUsers = async (query) => {
+  const { page = 1, limit = 10, role = "", status = "", search = "" } = query;
+  const filter = { $or: [] };
+
+  if (role) filter.role = role;
+  if (status) filter.status = status;
+
+  if (search) {
+    filter.$or.push(
+      { name: { $regex: search, $options: "i" } },
+      { email: { $regex: search, $options: "i" } },
+    );
   }
-  if (status) {
-    filter.status = status;
-  }
+
+  if (filter.$or.length === 0) delete filter.$or;
 
   const skippedDataCount = (page - 1) * limit;
 
@@ -44,7 +79,8 @@ const getUsers = async (query) => {
     User.find(filter)
       .select("-password")
       .skip(Number(skippedDataCount))
-      .limit(Number(limit)),
+      .limit(Number(limit))
+      .sort({ name: 1 }),
     User.countDocuments(filter),
   ]);
 
@@ -58,7 +94,6 @@ const getUsers = async (query) => {
     },
   };
 };
-
 const getUser = async (id) => {
   const user = await User.findById(id).select("-password");
   return {
