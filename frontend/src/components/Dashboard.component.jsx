@@ -29,7 +29,7 @@ const Dashboard = () => {
 
         setCurrentPage(1)
         setFilters({ search: "", role: "", status: "" })
-        navigate("/login")
+        navigate("/")
     }, [navigate])
 
 
