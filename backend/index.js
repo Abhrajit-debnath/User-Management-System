@@ -6,12 +6,24 @@ const express = require("express");
 const cors = require("cors");
 
 dotenv.config();
+
+const allowedOrigin = [
+  "https://user-management-system-seven-phi.vercel.app",
+  "http://localhost:3000",
+  "http://localhost:5173",
+];
 const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(
   cors({
-    origin: "https://user-management-system-seven-phi.vercel.app",
+    origin: function (origin, callback) {
+      if (allowedOrigin.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   }),
 );
