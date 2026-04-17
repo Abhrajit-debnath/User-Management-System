@@ -7,7 +7,7 @@ Full-stack user management dashboard project built with React, Node.js, Express,
 **Frontend:** React 18, Tailwind CSS, React Router, React Context  
 **Backend:** Node.js, Express, MongoDB, Mongoose  
 **Authentication:** JWT, bcrypt  
-**Deployment:** Railway + MongoDB Atlas (Backend), Vercel (Frontend)
+**Deployment:** Render + MongoDB Atlas (Backend), Vercel (Frontend)
 
 ## Features
 
@@ -92,8 +92,6 @@ frontend/
 | GET    | `/api/users/:id` | Get single user | ✅   |
 | PUT    | `/api/users/:id` | Update users    | ✅   |
 
-
-
 ## Screenshots Overview
 
 ## Login Page
@@ -103,8 +101,6 @@ frontend/
 ## Dashboard Page
 
 ![login_image](./screenshots/dashboard.png)
-
-
 
 ## Prerequisites
 
@@ -121,6 +117,7 @@ cd user-management
 cd backend
 npm install
 npm run dev
+npm run seed // for seeding users
 
 ### Frontend
 cd frontend
@@ -135,3 +132,22 @@ MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your-very-long-random-secret-key-minimum-32-chars
 PORT=8000
 ```
+
+## Usage Instructions
+
+## Demo Credentials
+
+### Admin
+
+- Email: admin@test.com
+- Password: admin123
+
+### Manager
+
+- Email: manager@test.com
+- Password: manager123
+
+### User
+
+- Email: user@test.com
+- Password: user@123
