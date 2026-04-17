@@ -46,7 +46,7 @@ const Dashboard = () => {
                         {
 
                             <EditUserForm
-                                editState={profile ? "ProfileEdit" : "userEdit"}
+                                editState={profile ? "profileEdit" : "userEdit"}
                                 user={selectedUser || profile}
                                 onClose={() => setopenEditModal(false)}
                             />
