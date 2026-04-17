@@ -9,10 +9,12 @@ dotenv.config();
 const PORT = process.env.PORT || 3000;
 const app = express();
 
-app.use(cors({
-  origin: "https://user-management-system-seven-phi.vercel.app",
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: "https://user-management-system-seven-phi.vercel.app",
+    credentials: true,
+  }),
+);
 
 connectb();
 
@@ -20,6 +22,18 @@ app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+
+app.get("/", (req, res) => {
+  res.json({
+    status: "active",
+    service: "User Management API",
+    version: "1.0.0",
+    endpoints: {
+      auth: "/api/auth",
+      users: "/api/users",
+    },
+  });
+});
 
 app.get("/health-check", (req, res) => {
   res.json({ status: "running" });
