@@ -398,6 +398,7 @@ const seedAdmin = async () => {
     ];
     await User.insertMany(users);
     console.log("All users seeded successfully!");
+    process.exit(1);
   } catch (error) {
     console.error("Seeding failed:", error.message);
     process.exit(1);
