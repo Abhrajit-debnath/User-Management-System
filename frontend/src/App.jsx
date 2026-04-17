@@ -18,7 +18,9 @@ function App() {
       path: "/dashboard", element:
 
         <ProtectedRoute>
-          <DashboardPage />
+          <UserContextProvider>
+            <DashboardPage />
+          </UserContextProvider>
         </ProtectedRoute>
 
     },
@@ -26,10 +28,12 @@ function App() {
 
 
   return (
-    <UserContextProvider>
+    <>
       <Toaster />
       <RouterProvider router={router} />
-    </UserContextProvider>
+    </>
+
+
 
 
 

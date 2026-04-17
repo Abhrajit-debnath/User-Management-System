@@ -17,13 +17,18 @@ const Dashboard = () => {
     const [openCreateModal, setopenCreateModal] = useState(false)
     const [selectedUser, setselectedUser] = useState(null)
     const [openMenu, setopenMenu] = useState(false)
-    const { users, setFilters, filters } = useContext(UserContext)
+    const { users, setUsers, setProfile, setFilters, filters } = useContext(UserContext)
     const { user, profile, isAdmin, isManager, pagination, currentPage, setCurrentPage, filteredUsers, inactiveUsers, activeUsers } = useUserState()
 
 
     const handleLogout = useCallback(() => {
         localStorage.removeItem("token")
         localStorage.removeItem("user")
+        setUsers([])
+        setProfile(null)
+
+        setCurrentPage(1)
+        setFilters({ search: "", role: "", status: "" })
         navigate("/login")
     }, [navigate])
 
@@ -399,7 +404,7 @@ const Dashboard = () => {
                             )}
                         </div>
                     )
-                ) }
+                )}
 
 
                 {isAdmin || isManager && filteredUsers.length > 0 && (

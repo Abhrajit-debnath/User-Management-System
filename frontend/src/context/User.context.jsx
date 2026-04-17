@@ -4,11 +4,8 @@ import { getUserFromStorage } from "../utils/getUser.util";
 
 export const UserContext = createContext();
 const UserContextProvider = ({ children }) => {
-    const token = localStorage.getItem("token");
-    const user = getUserFromStorage();
-    const role = user?.role;
-
     const [profile, setProfile] = useState(null);
+    const [token, setToken] = useState(localStorage.getItem("token"))
     const [users, setUsers] = useState([]);
     const [pagination, setPagination] = useState({
         total: 0,
@@ -20,6 +17,11 @@ const UserContextProvider = ({ children }) => {
     const [filters, setFilters] = useState({ search: "", role: "", status: "" });
 
     useEffect(() => {
+        const freshToken = localStorage.getItem("token")
+        const user = getUserFromStorage();
+        const role = user?.role;
+
+        setToken(freshToken)
 
         if (!token) return;
 
@@ -55,7 +57,7 @@ const UserContextProvider = ({ children }) => {
         };
 
         fetchData();
-    }, [token, role, currentPage, filters]);
+    }, [currentPage, filters]);
 
     return (
         <UserContext.Provider value={{

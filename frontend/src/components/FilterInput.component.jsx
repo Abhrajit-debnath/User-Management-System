@@ -46,7 +46,7 @@ const FilterInput = ({ setFilters, filters }) => {
                             const resetFilters = { search: '', role: '', status: '' };
                             setFilters(resetFilters);
                         }}
-                        className="px-4 py-2.5 bg-blue-500 hover:bg-blue-600 text-gray-700 rounded-xl text-sm font-medium shadow-sm hover:shadow-md transition-all duration-200 whitespace-nowrap"
+                        className="px-4 py-2.5 text-white bg-blue-500 hover:bg-blue-600 cursor-pointer rounded-xl text-sm font-medium shadow-sm hover:shadow-md transition-all duration-200 whitespace-nowrap"
                     >
                         Clear
                     </button>
